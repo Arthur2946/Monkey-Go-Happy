@@ -1,6 +1,8 @@
 var monkey, mRunning, banana, bananaG , stone, bImg, sImg, ground; 
 var obsGrp, score, bg, bgImg;
-
+var PLAY = 1;
+var END = 0;
+var gameState = PLAY;
 
 
 
@@ -33,6 +35,8 @@ function setup() {
   bananaG = createGroup();
   obsGrp = createGroup();
   
+  score = 0;
+  
 }
 
 function draw() {
@@ -40,7 +44,7 @@ function draw() {
   
   monkey.velocityY = monkey.velocityY + 0.5;
  
-  if (keyDown("space")&&monkey.y > 340) {
+  if (keyDown("space")&&monkey.y > 300) {
       monkey.velocityY = -12.5            ;
     }
   
@@ -49,19 +53,46 @@ function draw() {
   if (bg.x < 100 ) {
    bg.x = bg.width/2;
   }
+  
+  if (bananaG.isTouching(monkey)){
+     score = score+2; 
+     bananaG.destroyEach();
+  }
+  
+  switch(score) {
+      case 10: monkey.scale = 0.12;
+              break;
+      case 20: monkey.scale = 0.14;
+              break;
+      case 30: monkey.scale = 0.16;
+              break;
+      case 40: monkey.scale = 0.18;
+              break;
+      default:break;}
+
     
   bg.velocityX = -4;
+  
+  if(obsGrp.isTouching(monkey)){
+     monkey.scale = 0.10; 
+  }
   
   food();
   obs();
   
   drawSprites();
+  
+      stroke("white");
+      textSize(20);
+      fill("white")
+      text("Score:"+score, 400, 50);
+ 
 }
 
 function food() {
   
   if (frameCount % 80===0) {
-      banana = createSprite(500, random(250, 300), 10,10);
+      banana = createSprite(500, random(150, 250), 10,10);
       banana.addImage("Banana", bImg);
       banana.scale = 0.05;
       banana.velocityX = -10;
@@ -84,7 +115,6 @@ function obs() {
   }
   
 }
-
 
 
 
